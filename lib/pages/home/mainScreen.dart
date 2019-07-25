@@ -155,11 +155,11 @@ class _MainScreenState extends State<MainScreen> {
                 child: Container(
                     decoration: BoxDecoration(color: Colors.white),
                     child: Padding(
-                      padding: EdgeInsets.all(10.0),
+                      padding: EdgeInsets.all(0.0),
                       child: Image.asset(
                         'assets/images/logo.png',
-                        width: 40.0,
-                        height: 40.0,
+                        width: 60.0,
+                        height: 60.0,
                       ),
                     ))))
       ],

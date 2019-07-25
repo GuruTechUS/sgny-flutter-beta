@@ -75,6 +75,7 @@ class _EventDetailsState extends State<EventDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.deepPurpleAccent,
           title: Text(widget.title),
           actions: <Widget>[
             isAdminLoggedIn

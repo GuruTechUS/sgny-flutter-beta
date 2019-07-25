@@ -31,7 +31,7 @@ class _AddEventState extends State<AddEvent>{
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-
+          backgroundColor: Colors.deepPurpleAccent,
         ),
         body: SingleChildScrollView(
           child: isSubmitting ? submitIndecator(context) : addEventForm(context),

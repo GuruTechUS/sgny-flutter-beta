@@ -33,7 +33,7 @@ class _ContactsState extends State<Contacts> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: Colors.deepPurpleAccent,
           title:  Text("Contacts"),
         ),
         body: Center(

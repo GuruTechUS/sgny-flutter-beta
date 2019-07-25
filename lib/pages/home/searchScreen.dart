@@ -80,7 +80,7 @@ class _SearchScreenState extends State<SearchScreen> {
       mainAxisSpacing: 0.0,
       children: <Widget>[
         Container(
-          color: Colors.white54,
+          color: Colors.deepPurpleAccent.withOpacity(0.8),
           child: searchBar(context),
         ),
           fetchSearchResults(context)

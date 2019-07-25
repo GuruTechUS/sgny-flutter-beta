@@ -84,7 +84,7 @@ class _GalleryState extends State<Gallery> {
         key: _scaffoldKey,
         appBar: new AppBar(
           title: Text("Gallery"),
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: Colors.deepPurpleAccent,
           actions: <Widget>[
             isAdminLoggedIn
                 ? IconButton(

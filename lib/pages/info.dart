@@ -35,7 +35,7 @@ class _InfoState extends State<Info> {
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: Colors.deepPurpleAccent,
           title: Text("Info"),
           actions: <Widget>[
             adminLoggedIn == false
@@ -177,11 +177,11 @@ class _InfoState extends State<Info> {
           },
           child: Card(
             child: ListTile(
-              leading: Icon(Icons.local_phone, color: Colors.blueAccent),
+              leading: Icon(Icons.local_phone, color: Colors.deepPurpleAccent),
               title: Text(
                 snapshot.data.data["phone"] ??= "",
                 style:
-                    TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold),
+                    TextStyle(color: Colors.deepPurpleAccent, fontWeight: FontWeight.bold),
               ),
               trailing: Icon(Icons.chevron_right),
             ),

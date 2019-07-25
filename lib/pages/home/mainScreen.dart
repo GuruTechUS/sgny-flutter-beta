@@ -74,7 +74,7 @@ class _MainScreenState extends State<MainScreen> {
             : 650.0,
         decoration: new BoxDecoration(
           gradient: new LinearGradient(
-              colors: [ThemeColors.pageStart, ThemeColors.pageEnd],
+              colors: [Colors.white, Colors.white],
               begin: const FractionalOffset(0.0, 0.0),
               end: const FractionalOffset(1.0, 1.0),
               stops: [0.0, 1.0],
@@ -112,7 +112,7 @@ class _MainScreenState extends State<MainScreen> {
             child: Text(
           "Girls",
           style: TextStyle(
-                            color: Colors.white,
+                            color: Colors.pinkAccent,
                             fontSize: 24.0,
                             fontFamily: "WorkSansSemiBold"),
           ),
@@ -127,7 +127,7 @@ class _MainScreenState extends State<MainScreen> {
           child: Text(
           "Boys",
           style: TextStyle(
-                            color: Colors.white,
+                            color: Colors.blueAccent,
                             fontSize: 24.0,
                             fontFamily: "WorkSansSemiBold"),
           ),
@@ -143,7 +143,7 @@ class _MainScreenState extends State<MainScreen> {
       children: <Widget>[
         Positioned(
           child: SpinKitRipple(
-            color: Colors.white,
+            color: Colors.deepPurple,
             size: 100.0,
           ),
         ),
@@ -183,7 +183,7 @@ class _MainScreenState extends State<MainScreen> {
         width: 200.0,
         height: 50.0,
         decoration: BoxDecoration(
-          color: Color(0x552B2B2B),
+          color: Colors.deepPurpleAccent,//Color(0x552B2B2B),
           borderRadius: BorderRadius.all(Radius.circular(25.0)),
         ),
         child: Column(
@@ -221,7 +221,7 @@ class _MainScreenState extends State<MainScreen> {
   void _onHomSelected() {
     setState(() {
       this._isSearchSelected = false;
-      this.left = Colors.black;
+      this.left = Colors.deepPurple;
       this.right = Colors.white;
     });
   }
@@ -229,7 +229,7 @@ class _MainScreenState extends State<MainScreen> {
   void _onSearchSelected() {
     setState(() {
       this._isSearchSelected = true;
-      this.right = Colors.black;
+      this.right = Colors.deepPurple;
       this.left = Colors.white;
     });
   }
@@ -237,7 +237,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget _buildCards(BuildContext context, bool gender) {
     final sportsList = [
       {"name": "soccer", "title": "Soccer"},
-      {"name": "basketball", "title": "Basket Ball"},
+      {"name": "basketball", "title": "Basketball"},
       {"name": "volleyball", "title": "Volleyball"},
       {"name": "track", "title": "Track"}
     ];
@@ -270,6 +270,7 @@ class _MainScreenState extends State<MainScreen> {
     return Container(
       width: 180.0,
       child: Card(
+          color: gender ? Colors.blueAccent : Colors.pinkAccent,
           elevation: 5.0,
           child: Wrap(
             children: <Widget>[
@@ -279,7 +280,7 @@ class _MainScreenState extends State<MainScreen> {
                       child: Text(
                     sportsItem["title"],
                     style: TextStyle(
-                        color: gender ? Colors.blue : Colors.pink,
+                        color: Colors.white,
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,
                         fontFamily: "WorkSansSemiBold"),
@@ -313,13 +314,13 @@ class _MainScreenState extends State<MainScreen> {
             shape: new CircleBorder(),
             elevation: 0.0,
             padding: const EdgeInsets.all(15.0),
-            color: gender ? Colors.blue : Colors.pink,
+            color: Colors.white,
             child: Transform.rotate(
                 angle: -0.5,
                 child: Text(
                   button['name'],
                   style: TextStyle(
-                      color: Colors.white,
+                      color: gender ? Colors.blueAccent : Colors.pinkAccent,
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                       fontFamily: "WorkSansSemiBold"),
@@ -338,8 +339,8 @@ class _MainScreenState extends State<MainScreen> {
                   child: Text(
                 button['desc'],
                 style: TextStyle(
-                    color: gender ? Colors.blue : Colors.pink,
-                    fontSize: 8.0,
+                    color: Colors.white,
+                    fontSize: 12.0,
                     fontWeight: FontWeight.bold,
                     fontFamily: "WorkSansSemiBold"),
               ))))

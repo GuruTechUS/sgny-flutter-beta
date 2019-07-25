@@ -10,13 +10,13 @@ void main() {
     .then((_) {
      runApp(
         MaterialApp(
-          title: 'Sikh Games of NJ',
+          title: 'Sikh Games of NY',
           debugShowCheckedModeBanner: false,
           navigatorObservers: [
             FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
           ],
           theme: new ThemeData(
-            primarySwatch: Colors.blue,
+            primarySwatch: Colors.deepPurple,
           ),
           home: MyApp(),
         )

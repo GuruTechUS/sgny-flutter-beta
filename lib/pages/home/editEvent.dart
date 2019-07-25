@@ -33,6 +33,7 @@ class _EditEventState extends State<EditEvent>{
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.deepPurpleAccent,
         ),
         body: SingleChildScrollView(
           child: isSubmitting ? submitIndecator(context) : streamBulderForEvent(context)//addEventForm(context),

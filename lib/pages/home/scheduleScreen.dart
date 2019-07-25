@@ -100,6 +100,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     return CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
+          backgroundColor: Colors.deepPurpleAccent,
           expandedHeight: 50.0,
           pinned: true,
           flexibleSpace: FlexibleSpaceBar(

@@ -68,7 +68,7 @@ class _AppNavBarState extends State<AppNavBar> {
           },
         ),
         body: Container(
-            color: Colors.blueAccent,
+            color: Colors.white,
             child: SafeArea(
               child: _displayPage,
             )));

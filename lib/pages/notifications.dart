@@ -22,7 +22,7 @@ class _NotificationsState extends State<Notifications>{
     return Scaffold(
         appBar: AppBar(
           title: Text('Notifications'),
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: Colors.deepPurpleAccent,
         ),
         body: Center(
         child: notificationsList(context),
@@ -80,7 +80,7 @@ class _NotificationsState extends State<Notifications>{
                                     style: TextStyle(
                                       fontSize: 16.0,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.blueAccent
+                                      color: Colors.deepPurpleAccent
                                     )),
                                 ),
                                 displayTimeAgo(snapshot.data.documents[index]["timestamp"]),

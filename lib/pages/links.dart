@@ -28,7 +28,7 @@ class _LinksState extends State<Links>{
     return Scaffold(
         appBar: AppBar(
           title: Text('Docs/Links'),
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: Colors.deepPurpleAccent,
         ),
         body: Center(
         child: linkList(context),

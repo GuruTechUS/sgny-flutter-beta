@@ -1,7 +1,9 @@
+import 'dart:io';
+
+import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import 'searchScreen.dart';
-import 'package:sgny/style/themeColor.dart';
 import 'package:sgny/utils/tab_indication_painter.dart';
 import 'package:flutter/material.dart';
 import 'scheduleScreen.dart';
@@ -29,6 +31,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    setStatusBarColor();
     return staggeredView(context);
   }
 
@@ -47,6 +50,13 @@ class _MainScreenState extends State<MainScreen> {
         StaggeredTile.extent(1, MediaQuery.of(context).size.height - 220),
       ],
     );
+  }
+
+  setStatusBarColor() async {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+                statusBarColor: Colors.white, // Color for Android
+                statusBarBrightness: Brightness.light // Dark == white status bar -- for IOS.
+              ));
   }
 
   header(BuildContext context){
@@ -325,10 +335,16 @@ class _MainScreenState extends State<MainScreen> {
                       fontWeight: FontWeight.bold,
                       fontFamily: "WorkSansSemiBold"),
                 )),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
+            onPressed: () async {
+              await Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return ScheduleScreen(sportsItem, button, gender);
               }));
+              Future.delayed(const Duration(milliseconds: 150), () {
+                  updateStatusBarColor();
+              });
+              Future.delayed(const Duration(milliseconds: 500), () {
+                  updateStatusBarColor();
+              });
             },
           )),
       Positioned(
@@ -345,5 +361,21 @@ class _MainScreenState extends State<MainScreen> {
                     fontFamily: "WorkSansSemiBold"),
               ))))
     ]));
+  }
+
+  updateStatusBarColor(){
+    if (Platform.isAndroid) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+                statusBarColor: Colors.white, // Color for Android
+                statusBarBrightness: Brightness.dark
+              ));
+    } else if (Platform.isIOS) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+                statusBarColor: Colors.white, // Color for Android
+                statusBarBrightness: Brightness.light // Dark == white status bar -- for IOS.
+              ));
+    }
+    setState(() {
+    });
   }
 }

@@ -34,7 +34,7 @@ dependencies:
   image_picker: 0.6.0+10
   image: ^2.1.4
   path_provider: ^1.1.2
-
+  
   firebase_core: ^0.4.0 #^0.2.5
   firebase_analytics: ^1.0.4
   cloud_firestore: ^0.12.6 #^0.8.2+3

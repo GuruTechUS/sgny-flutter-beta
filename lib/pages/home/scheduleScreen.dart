@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/services.dart';
 import 'package:sgny/pages/home/addEvent.dart';
 import 'package:sgny/pages/home/eventDetails.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -24,6 +27,12 @@ class ScheduleScreen extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
+    if (Platform.isAndroid) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+                statusBarColor: Colors.deepPurpleAccent, // Color for Android
+                statusBarBrightness: Brightness.light // Dark == white status bar -- for IOS.
+              ));
+    }
     return _ScheduleScreenState(sportsItem, category, gender);
   }
 }

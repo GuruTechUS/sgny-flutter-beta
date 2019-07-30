@@ -19,7 +19,7 @@ class EditEvent extends StatefulWidget{
 class _EditEventState extends State<EditEvent>{
 
   final _formKey = GlobalKey<FormState>();
-  static EventModel _event = EventModel();
+  EventModel _event = EventModel();
   final dateFormat2 = DateFormat("d MMMM yyyy 'at' hh:mm:ss a");
   bool isSubmitting = false;
   
@@ -54,24 +54,24 @@ class _EditEventState extends State<EditEvent>{
     );
   }
 
-  fetchEventData(eventData) async {
-        if(eventData != null){
+  fetchEventData(eventData) {
+        if(eventData != null && eventData.data != null){
           _event.location = eventData.data["location"];
           _event.round = eventData.data["round"];
           _event.status = eventData.data["status"];
           _event.sport = eventData.data["sport"];
           _event.category = eventData.data["category"];
           _event.gender = eventData.data["gender"];
-          _event.isTeamSport = eventData.data["isTeamSport"];
+          if(eventData.data["isTeamSport"] == true){
+               _event.isTeamSport = !_event.isTeamSport;
+          }
           _event.startTime = (eventData.data["startTime"] as Timestamp).toDate();
           _event.teams = eventData.data["teams"];
-          print(_event.teams);
         }
       
   }
 
   Widget addEventForm(BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-
     fetchEventData(snapshot);
     return Form(
       key: _formKey,

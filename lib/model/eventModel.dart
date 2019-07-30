@@ -13,6 +13,16 @@ class EventModel {
   bool isTeamSport = false;
   List teams;
 
+  setTeamSport(bool value){
+    if(value != null){
+      isTeamSport = value;
+    }
+  }
+
+  getTeamSport(){
+    return isTeamSport;
+  }
+
   save() async {
     CollectionReference eventList = Firestore.instance.collection("events");
     await eventList.add({

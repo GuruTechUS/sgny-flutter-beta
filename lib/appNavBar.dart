@@ -44,7 +44,7 @@ class _AppNavBarState extends State<AppNavBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
         bottomNavigationBar: CurvedNavigationBar(
           index: 0,
           height: 75.0,
@@ -56,7 +56,7 @@ class _AppNavBarState extends State<AppNavBar> {
             Icon(Icons.contact_phone, size: 30),
             Icon(Icons.info, size: 30),
           ],
-          color: Colors.white,
+          color: Colors.white70,
           buttonBackgroundColor: Color(0xffbdc3c7),
           backgroundColor: Colors.black,
           animationCurve: Curves.easeInOut,

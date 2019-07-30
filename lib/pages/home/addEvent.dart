@@ -20,7 +20,7 @@ class AddEvent extends StatefulWidget{
 class _AddEventState extends State<AddEvent>{
 
   final _formKey = GlobalKey<FormState>();
-  static EventModel _event = EventModel();
+  EventModel _event = EventModel();
   final dateFormat = DateFormat("EEEE, MMMM d, yyyy 'at' h:mma");
   final dateFormat2 = DateFormat("d MMMM yyyy 'at' hh:mm:ss a");
   bool isSubmitting = false;

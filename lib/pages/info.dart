@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:sgny/utils/firebase_anon_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -8,6 +11,17 @@ import 'loginPage.dart';
 class Info extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
+   if (Platform.isAndroid) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+                statusBarColor: Colors.deepPurpleAccent, // Color for Android
+                statusBarBrightness: Brightness.light // Dark == white status bar -- for IOS.
+              ));
+    } else if (Platform.isIOS) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+                statusBarColor: Colors.white, // Color for Android
+                statusBarBrightness: Brightness.light // Dark == white status bar -- for IOS.
+              ));
+    }
     return _InfoState();
   }
 }
@@ -60,6 +74,12 @@ class _InfoState extends State<Info> {
                               style: TextStyle(color: Colors.black),
                             )));
                       }
+                      Future.delayed(const Duration(milliseconds: 150), () {
+                            updateStatusBarColor();
+                        });
+                        Future.delayed(const Duration(milliseconds: 500), () {
+                            updateStatusBarColor();
+                        });
                     },
                   )
                 : FlatButton.icon(
@@ -235,5 +255,21 @@ class _InfoState extends State<Info> {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  updateStatusBarColor(){
+    if (Platform.isAndroid) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+                statusBarColor: Colors.deepPurpleAccent, // Color for Android
+                statusBarBrightness: Brightness.light // Dark == white status bar -- for IOS.
+              ));
+    } else if (Platform.isIOS) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+                statusBarColor: Colors.white, // Color for Android
+                statusBarBrightness: Brightness.light // Dark == white status bar -- for IOS.
+              ));
+    }
+    setState(() {
+    });
   }
 }

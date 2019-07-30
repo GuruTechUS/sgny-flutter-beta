@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sgny/pages/gallery/photoView.dart';
 import 'package:sgny/utils/firebase_anon_auth.dart';
@@ -18,6 +19,17 @@ import 'package:path_provider/path_provider.dart';
 class Gallery extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
+    if (Platform.isAndroid) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+                statusBarColor: Colors.deepPurpleAccent, // Color for Android
+                statusBarBrightness: Brightness.light // Dark == white status bar -- for IOS.
+              ));
+    } else if (Platform.isIOS) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+                statusBarColor: Colors.white, // Color for Android
+                statusBarBrightness: Brightness.light // Dark == white status bar -- for IOS.
+              ));
+    }
     return _GalleryState();
   }
 }
@@ -91,8 +103,6 @@ class _GalleryState extends State<Gallery> {
                     icon: Icon(Icons.add),
                     tooltip: 'Add Photo',
                     onPressed: () {
-                      //addPhoto();
-                      //_optionsDialogBox();
                       openGallery();
                     },
                   )
@@ -145,12 +155,18 @@ class _GalleryState extends State<Gallery> {
                     borderRadius:
                         new BorderRadius.all(new Radius.circular(8.0)),
                     child: new InkWell(
-                      onTap: () {
-                        Navigator.push(
+                      onTap: () async {
+                        await Navigator.push(
                             context,
                             new MaterialPageRoute(
                                 builder: (context) =>
                                     PhotoViewer(i, isAdminLoggedIn)));
+                        Future.delayed(const Duration(milliseconds: 150), () {
+                            updateStatusBarColor();
+                        });
+                        Future.delayed(const Duration(milliseconds: 500), () {
+                            updateStatusBarColor();
+                        });
                       },
                       child: new Hero(
                         tag: photoList[i].documentID,
@@ -182,8 +198,21 @@ class _GalleryState extends State<Gallery> {
     }
   }
 
+  updateStatusBarColor(){
+    if (Platform.isAndroid) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+                statusBarColor: Colors.deepPurpleAccent, // Color for Android
+                statusBarBrightness: Brightness.light // Dark == white status bar -- for IOS.
+              ));
+    } else if (Platform.isIOS) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+                statusBarColor: Colors.white, // Color for Android
+                statusBarBrightness: Brightness.light // Dark == white status bar -- for IOS.
+              ));
+    }
+  }
+
   Future openGallery() async {
-    //var picture = "openGallery";
     File picture = await ImagePicker.pickImage(source: ImageSource.gallery);
     uploadImageToStorage(picture);
   }

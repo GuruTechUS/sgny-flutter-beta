@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:sgny/utils/firebase_anon_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -7,6 +10,17 @@ class Contacts extends StatefulWidget{
 
   @override
   State<StatefulWidget> createState() {
+    if (Platform.isAndroid) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+                statusBarColor: Colors.deepPurpleAccent, // Color for Android
+                statusBarBrightness: Brightness.light // Dark == white status bar -- for IOS.
+              ));
+    } else if (Platform.isIOS) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+                statusBarColor: Colors.white, // Color for Android
+                statusBarBrightness: Brightness.light // Dark == white status bar -- for IOS.
+              ));
+    }
     return _ContactsState();
   }
 }

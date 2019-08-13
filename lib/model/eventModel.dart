@@ -40,6 +40,7 @@ class EventModel {
   }
 
   update(String documentId) {
+    print(startTime);
     Firestore.instance.collection("events").document(documentId).updateData({
       "category": category,
       "sport": sport,

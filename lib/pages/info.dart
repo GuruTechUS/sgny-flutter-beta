@@ -27,7 +27,8 @@ class Info extends StatefulWidget {
 }
 
 class _InfoState extends State<Info> {
-  FirebaseAnonAuth firebaseAuth = FirebaseAnonAuth();
+  final FirebaseAnonAuth firebaseAuth = FirebaseAnonAuth();
+  
   bool adminLoggedIn = false;
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -40,6 +41,9 @@ class _InfoState extends State<Info> {
             adminLoggedIn = true;
           });
         }
+      } else {
+        firebaseAuth.signInAnon().then((anonUser) { 
+        });
       }
     });
   }

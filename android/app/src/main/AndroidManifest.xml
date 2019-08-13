@@ -9,7 +9,7 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="sgny"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@drawable/background">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

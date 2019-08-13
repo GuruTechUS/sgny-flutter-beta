@@ -135,11 +135,11 @@ class _AddEventState extends State<AddEvent>{
                         // otherwise.
                         if (_formKey.currentState.validate()) {
                           // If the form is valid, display a Snackbar.
-                          _event.gender = widget.gender == null ? widget.gender : false;
+                          if(widget.gender == true){
+                            _event.gender = !_event.gender;
+                          }
                           _event.category = widget.category;
                           _event.sport = widget.sport;
-                          
-
                           setState(() {
                             isSubmitting = true;
                           });

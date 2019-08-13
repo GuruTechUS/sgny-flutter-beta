@@ -19,13 +19,15 @@ class EditEvent extends StatefulWidget{
 class _EditEventState extends State<EditEvent>{
 
   final _formKey = GlobalKey<FormState>();
-  EventModel _event = EventModel();
+  EventModel _event;
   final dateFormat2 = DateFormat("d MMMM yyyy 'at' hh:mm:ss a");
   bool isSubmitting = false;
+  bool firstLoad = true;
   
 
   @override
   void initState() {
+    _event = EventModel();
     super.initState();
   }
 
@@ -55,7 +57,7 @@ class _EditEventState extends State<EditEvent>{
   }
 
   fetchEventData(eventData) {
-        if(eventData != null && eventData.data != null){
+        if(firstLoad == true && eventData != null && eventData.data != null){
           _event.location = eventData.data["location"];
           _event.round = eventData.data["round"];
           _event.status = eventData.data["status"];
@@ -67,6 +69,7 @@ class _EditEventState extends State<EditEvent>{
           }
           _event.startTime = (eventData.data["startTime"] as Timestamp).toDate();
           _event.teams = eventData.data["teams"];
+          firstLoad = false;
         }
       
   }
@@ -131,7 +134,9 @@ class _EditEventState extends State<EditEvent>{
                     format: dateFormat2,
                     onChanged: (dateTime) {
                       if(dateTime != null){
-                        _event.startTime = dateTime;
+                        setState(() {
+                            _event.startTime = dateTime;
+                        });
                       }
                     },
                   ),
@@ -175,13 +180,11 @@ class _EditEventState extends State<EditEvent>{
                           //_event.gender = widget.gender == null ? widget.gender : false;
                           //_event.category = widget.category;
                           //_event.sport = widget.sport;
-                          
-
                           setState(() {
                             isSubmitting = true;
                           });
-                          _event.update(widget.documentId);
-                          Navigator.pop(context);
+                            _event.update(widget.documentId);
+                            Navigator.pop(context);
                         }
                       },
                       child: Text('Update'),

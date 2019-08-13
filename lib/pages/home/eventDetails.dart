@@ -451,7 +451,7 @@ class _EventDetailsState extends State<EventDetails> {
 
   getDate(DateTime startTime) {
     if (startTime != null) {
-      return Text(startTime.day.toString() + " " + months[startTime.month]);
+      return Text(startTime.day.toString() + " " + months[startTime.month - 1]);
     } else {
       return Text("");
     }
@@ -464,6 +464,9 @@ class _EventDetailsState extends State<EventDetails> {
       String sufix = "AM";
       if (startTime.hour >= 12) {
         hour = (startTime.hour - 12).toString();
+        if(hour == '0'){
+          hour = '12';
+        }
         sufix = "PM";
       }
       return Text(

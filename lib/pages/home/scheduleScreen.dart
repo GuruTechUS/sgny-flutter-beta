@@ -29,11 +29,35 @@ class ScheduleScreen extends StatefulWidget {
   State<StatefulWidget> createState() {
     if (Platform.isAndroid) {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-                statusBarColor: Colors.deepPurpleAccent, // Color for Android
-                statusBarBrightness: Brightness.light // Dark == white status bar -- for IOS.
-              ));
+          statusBarColor: Colors.deepPurpleAccent, // Color for Android
+          statusBarBrightness:
+              Brightness.light // Dark == white status bar -- for IOS.
+          ));
     }
+    Future.delayed(const Duration(milliseconds: 150), () {
+      updateStatusBarColor();
+    });
+    Future.delayed(const Duration(milliseconds: 500), () {
+      updateStatusBarColor();
+    });
+
     return _ScheduleScreenState(sportsItem, category, gender);
+  }
+
+  updateStatusBarColor() {
+    if (Platform.isAndroid) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+          statusBarColor: Colors.deepPurpleAccent, // Color for Android
+          statusBarBrightness:
+              Brightness.light // Dark == white status bar -- for IOS.
+          ));
+    } else if (Platform.isIOS) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+          statusBarColor: Colors.white, // Color for Android
+          statusBarBrightness:
+              Brightness.light // Dark == white status bar -- for IOS.
+          ));
+    }
   }
 }
 
@@ -139,69 +163,71 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
         ),
         snapshot.data.documents.length == 0
             ? SliverFillRemaining(
-              child:Card(
+                child: Card(
                 child: Center(
                   child: Text("No events available yet!"),
                 ),
               ))
-        : 
-        SliverList(
-          delegate: SliverChildBuilderDelegate((context, index) {
-            return InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      new MaterialPageRoute(
-                          builder: (context) => EventDetails(
-                              userId,
-                              snapshot.data.documents[index].documentID,
-                              (gender == true ? "Boys" : "Girls") +
-                                  " / " +
-                                  sportsItem["title"] +
-                                  " / " +
-                                  category["name"])));
-                },
-                child: Card(
-                  child: new Container(
-                      padding: EdgeInsets.all(10.0),
-                      child: new Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Expanded(
-                              child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              displayTeams(
-                                  snapshot.data.documents[index]["teams"]),
-                              displayLocation(
-                                  snapshot.data.documents[index]["location"]),
-                              displayStatus(
-                                  snapshot.data.documents[index]["status"])
-                            ],
-                          )),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: <Widget>[
-                              snapshot.data.documents[index]["startTime"] != null?
-                                displayTimeAndDate(
-                                  snapshot.data.documents[index]["startTime"]):Text(""),
-                            ],
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: <Widget>[
-                              subscribeToEvent(
-                                  snapshot.data.documents[index].documentID),
-                            ],
-                          )
-                        ],
-                      )),
-                ));
-          }, childCount: snapshot.data.documents.length),
-        )
+            : SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (context) => EventDetails(
+                                    userId,
+                                    snapshot.data.documents[index].documentID,
+                                    (gender == true ? "Boys" : "Girls") +
+                                        " / " +
+                                        sportsItem["title"] +
+                                        " / " +
+                                        category["name"])));
+                      },
+                      child: Card(
+                        child: new Container(
+                            padding: EdgeInsets.all(10.0),
+                            child: new Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Expanded(
+                                    child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    displayTeams(snapshot.data.documents[index]
+                                        ["teams"]),
+                                    displayLocation(snapshot
+                                        .data.documents[index]["location"]),
+                                    displayStatus(snapshot.data.documents[index]
+                                        ["status"])
+                                  ],
+                                )),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: <Widget>[
+                                    snapshot.data.documents[index]
+                                                ["startTime"] !=
+                                            null
+                                        ? displayTimeAndDate(snapshot
+                                            .data.documents[index]["startTime"])
+                                        : Text(""),
+                                  ],
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: <Widget>[
+                                    subscribeToEvent(snapshot
+                                        .data.documents[index].documentID),
+                                  ],
+                                )
+                              ],
+                            )),
+                      ));
+                }, childCount: snapshot.data.documents.length),
+              )
       ],
     );
   }
@@ -269,7 +295,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
   getDate(DateTime startTime) {
     if (startTime != null) {
-      return Text(startTime.day.toString() + " " + months[startTime.month]);
+      return Text(startTime.day.toString() + " " + months[startTime.month - 1]);
     } else {
       return Text("");
     }
@@ -282,6 +308,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       String sufix = "AM";
       if (startTime.hour >= 12) {
         hour = (startTime.hour - 12).toString();
+        if (hour == '0') {
+          hour = '12';
+        }
         sufix = "PM";
       }
       return Text(
@@ -293,12 +322,11 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   displayStatus(String status) {
-    if(status != null){
+    if (status != null) {
       return Text(status);
     } else {
       return Text("");
     }
-    
   }
 
   subscribeToEvent(documentID) {

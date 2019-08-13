@@ -6,60 +6,59 @@ import 'package:sgny/utils/firebase_anon_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class Contacts extends StatefulWidget{
-
+class Contacts extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     if (Platform.isAndroid) {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-                statusBarColor: Colors.deepPurpleAccent, // Color for Android
-                statusBarBrightness: Brightness.light // Dark == white status bar -- for IOS.
-              ));
+          statusBarColor: Colors.deepPurpleAccent, // Color for Android
+          statusBarBrightness:
+              Brightness.light // Dark == white status bar -- for IOS.
+          ));
     } else if (Platform.isIOS) {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-                statusBarColor: Colors.white, // Color for Android
-                statusBarBrightness: Brightness.light // Dark == white status bar -- for IOS.
-              ));
+          statusBarColor: Colors.white, // Color for Android
+          statusBarBrightness:
+              Brightness.light // Dark == white status bar -- for IOS.
+          ));
     }
     return _ContactsState();
   }
 }
 
-
 class _ContactsState extends State<Contacts> {
-
   FirebaseAnonAuth firebaseAuth = FirebaseAnonAuth();
   bool adminLoggedIn = false;
 
-  _ContactsState()  {
+  _ContactsState() {
     // firebaseAuth.isLoggedIn().then((user){
     //   if(user !=null && user.uid != null && user.uid != ""){
     //     if(user.isAnonymous == false){
-    //       setState(() { 
+    //       setState(() {
     //           adminLoggedIn = true;
     //       });
     //     }
     //   }
     // });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.deepPurpleAccent,
-          title:  Text("Contacts"),
+          title: Text("Contacts"),
         ),
         body: Center(
-        child: infoPageContent(context),
-    ));
+          child: infoPageContent(context),
+        ));
   }
 
   Widget infoPageContent(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance.collection("contacts").snapshots(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if(!snapshot.hasData){
+        if (!snapshot.hasData) {
           return CircularProgressIndicator();
         } else {
           return renderLinkList(snapshot);
@@ -68,110 +67,146 @@ class _ContactsState extends State<Contacts> {
     );
   }
 
-  renderLinkList(AsyncSnapshot<QuerySnapshot> snapshot){
-      return CustomScrollView(
-        slivers: <Widget>[
-          snapshot.data.documents.length == 0
+  renderLinkList(AsyncSnapshot<QuerySnapshot> snapshot) {
+    return CustomScrollView(
+      slivers: <Widget>[
+        snapshot.data.documents.length == 0
             ? SliverFillRemaining(
-              child:Card(
+                child: Card(
                 child: Center(
                   child: Text("No contacts available!!"),
                 ),
               ))
-        : SliverList(
-            delegate: SliverChildBuilderDelegate((context, index) {
-              return Card(
-                child: new Container(
-                  padding: EdgeInsets.all(10.0),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: <Widget>[
-                              contactIcon(),
-                            ],
-                          ),
-                          Expanded(
-                            child: Column(
+            : SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  return Card(
+                    child: new Container(
+                        padding: EdgeInsets.all(10.0),
+                        child: Column(
+                          children: <Widget>[
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  (snapshot.data.documents[index]["title"] !=
+                                          null
+                                      ? Text(
+                                          snapshot.data.documents[index]
+                                                  ["title"] ??
+                                              "",
+                                          style: TextStyle(
+                                              fontSize: 18.0,
+                                              fontWeight: FontWeight.bold))
+                                      : Container())
+                                ]),
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Text(snapshot.data.documents[index]["name"],
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: <Widget>[
+                                    contactIcon(),
+                                  ],
+                                ),
+                                Expanded(
+                                    child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    (snapshot.data.documents[index]["name"] !=
+                                            null
+                                        ? Text(
+                                            snapshot.data.documents[index]
+                                                    ["name"] ??
+                                                "",
+                                            style: TextStyle(fontSize: 16.0))
+                                        : Container()),
+                                    (snapshot.data.documents[index]["number"] !=
+                                            null
+                                        ? Text(snapshot.data.documents[index]
+                                                ["number"] ??
+                                            "")
+                                        : Container()),
+                                    (snapshot.data.documents[index]["email"] !=
+                                            null
+                                        ? Text(snapshot.data.documents[index]
+                                                ["email"] ??
+                                            "")
+                                        : Container()),
+                                  ],
                                 )),
-                                Text(snapshot.data.documents[index]["number"])
-                              //  displayTeams(snapshot.data.documents[index]["teams"]),
+                                (snapshot.data.documents[index]["email"] !=
+                                            null ? Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: <Widget>[
+                                    displayEmailButton(snapshot.data.documents[index]["email"]),
+                                  ],
+                                ): Container()),
+                                (snapshot.data.documents[index]["number"] !=
+                                            null ? Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: <Widget>[
+                                    displayCallButton(snapshot.data.documents[index]["number"]),
+                                  ],
+                                ): Container()),
                               ],
-                            )
-                          ),
-                            Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: <Widget>[
-                              openButton(snapshot.data.documents[index]["number"]),
-                            ],
-                          )
-                        ],
-                      ),
-                      moreInfo(snapshot.data.documents[index]["info"])
-                    ],
-                  )
-                   
-                ),
-              );
-            },
-            childCount: snapshot.data.documents.length
-            ),
-          )
-        ],
-      );
+                            ),
+                            (snapshot.data.documents[index]["info"] != null ? moreInfo(snapshot.data.documents[index]["info"]) : Container())
+                          ],
+                        )),
+                  );
+                }, childCount: snapshot.data.documents.length),
+              )
+      ],
+    );
   }
 
-  moreInfo(info){
+  moreInfo(info) {
     return Row(
       children: <Widget>[
-         Expanded(
-          child: Text(info),
+        Expanded(
+          child: Text(info ?? ""),
         )
       ],
     );
   }
 
-  openButton(url){
+  displayCallButton(url) {
     return Container(
-      padding: EdgeInsets.all(10.0),
-      child: InkWell(
+        padding: EdgeInsets.all(10.0),
+        child: InkWell(
             onTap: () {
-            _launchURL(Uri.encodeFull(url));
+              _launchURL("tel:" + Uri.encodeFull(url));
             },
-            child: Image.asset(
-                 "assets/images/call.png",
-                width: 30,
-              )));
+            child: Icon(Icons.call, color: Colors.blueAccent)));
   }
 
-  contactIcon(){
+  displayEmailButton(url) {
     return Container(
-      padding: EdgeInsets.all(10.0),
-      child: Image.asset(
-                 "assets/images/contact.png",
-                width: 30,
-              ));
+        padding: EdgeInsets.all(10.0),
+        child: InkWell(
+            onTap: () {
+              _launchURL("mailto:" + Uri.encodeFull(url));
+            },
+            child: Icon(Icons.email, color: Colors.blueAccent)));
+  }
+
+  contactIcon() {
+    return Container(
+        padding: EdgeInsets.all(10.0),
+        child: Image.asset(
+          "assets/images/contact.png",
+          width: 30,
+        ));
   }
 
   _launchURL(url) async {
-    if (await canLaunch("tel:"+url)) {
-      await launch("tel:"+url);
+    if (await canLaunch(url)) {
+      await launch(url);
     } else {
       throw 'Could not launch $url';
     }
   }
-
 }
-  

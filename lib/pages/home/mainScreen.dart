@@ -1,14 +1,15 @@
 import 'dart:io';
 
+import 'package:easy_dialog/easy_dialog.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'searchScreen.dart';
 import 'package:sgny/utils/tab_indication_painter.dart';
 import 'package:flutter/material.dart';
 import 'scheduleScreen.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-
 
 class MainScreen extends StatefulWidget {
   @override
@@ -18,12 +19,11 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  
   bool _isSearchSelected = false;
   Color left = Colors.black;
   Color right = Colors.white;
+  bool displayDialog = true;
 
-  
   @override
   void initState() {
     super.initState();
@@ -32,19 +32,59 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     setStatusBarColor();
-    return staggeredView(context);
+    return Scaffold(
+      body: staggeredView(context),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          _launchURL("https://www.google.com/maps/place/Robert+M.+Finley+Middle+School/@40.8711936,-73.6305071,17z/data=!3m1!4b1!4m5!3m4!1s0x89c2851af29a52eb:0xe38aab0d7f82b05!8m2!3d40.8711936!4d-73.6283184");
+        },
+        icon: Icon(Icons.location_on),
+        label: Text("Event Location"),
+      ),
+    );
+  }  
+
+  _launchURL(url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
-  Widget staggeredView(BuildContext context){
+  displayWelcomeDialog() {
+    double heigh = (MediaQuery.of(context).size.height - 80.0);
+    double width = (MediaQuery.of(context).size.width - 20.0);
+    if(heigh > (width * 1.49053857351)){
+      heigh = width * 1.49053857351;
+    } else {
+      width = heigh * 0.6708984375;
+    }
+    if (displayDialog) {
+      //displayDialog = false;
+      EasyDialog(
+          cornerRadius: 10.0,
+          fogOpacity: 0.1,
+          height: heigh,
+          width: width,
+          contentPadding: EdgeInsets.all(10.0), // Needed for the button design
+          contentList: [
+            Container(
+                child: Image(
+                    image: NetworkImage(
+                        "https://firebasestorage.googleapis.com/v0/b/sgny-app.appspot.com/o/2019%2F2019-08-02%2020:36:21.108647.jpg?alt=media&token=ee697845-545e-4429-a6dd-ab45566af543"),
+                    fit: BoxFit.cover)),
+          ]).show(context);
+    }
+  }
+
+  Widget staggeredView(BuildContext context) {
     return StaggeredGridView.count(
       crossAxisCount: 1,
       crossAxisSpacing: 10.0,
       mainAxisSpacing: 10.0,
       //padding: EdgeInsets.all(5.0),
-      children: <Widget>[
-        header(context),
-        homeBodyContent(context)
-        ],
+      children: <Widget>[header(context), homeBodyContent(context)],
       staggeredTiles: [
         StaggeredTile.extent(1, 110),
         StaggeredTile.extent(1, MediaQuery.of(context).size.height - 220),
@@ -54,55 +94,55 @@ class _MainScreenState extends State<MainScreen> {
 
   setStatusBarColor() async {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-                statusBarColor: Colors.white, // Color for Android
-                statusBarBrightness: Brightness.light // Dark == white status bar -- for IOS.
-              ));
+        statusBarColor: Colors.white, // Color for Android
+        statusBarBrightness:
+            Brightness.light // Dark == white status bar -- for IOS.
+        ));
   }
 
-  header(BuildContext context){
+  header(BuildContext context) {
     return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Padding(
-                  padding: EdgeInsets.only(top: 10.0),
-                  child: _buildLogo(context)),
-              Padding(
-                padding: EdgeInsets.only(top: 10.0),
-                child: _buildMenuBar(context),
-              ),
-            ],
-          );
-  }
-
-  Widget homeBodyContent(BuildContext context) {
-    return _isSearchSelected ? _searchScreen() : SingleChildScrollView(//SingleChildScrollView(
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height >= 650.0
-            ? MediaQuery.of(context).size.height
-            : 650.0,
-        decoration: new BoxDecoration(
-          gradient: new LinearGradient(
-              colors: [Colors.white, Colors.white],
-              begin: const FractionalOffset(0.0, 0.0),
-              end: const FractionalOffset(1.0, 1.0),
-              stops: [0.0, 1.0],
-              tileMode: TileMode.clamp),
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisSize: MainAxisSize.max,
+      children: <Widget>[
+        Padding(
+            padding: EdgeInsets.only(top: 10.0), child: _buildLogo(context)),
+        Padding(
+          padding: EdgeInsets.only(top: 10.0),
+          child: _buildMenuBar(context),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.max, 
-          children: <Widget>[
-          Container(
-            child: _categoryList(context),
-          )
-          
-        ]),
-      ),
+      ],
     );
   }
 
-  _searchScreen(){
+  Widget homeBodyContent(BuildContext context) {
+    return _isSearchSelected
+        ? _searchScreen()
+        : SingleChildScrollView(
+            //SingleChildScrollView(
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height >= 650.0
+                  ? MediaQuery.of(context).size.height
+                  : 650.0,
+              decoration: new BoxDecoration(
+                gradient: new LinearGradient(
+                    colors: [Colors.white, Colors.white],
+                    begin: const FractionalOffset(0.0, 0.0),
+                    end: const FractionalOffset(1.0, 1.0),
+                    stops: [0.0, 1.0],
+                    tileMode: TileMode.clamp),
+              ),
+              child: Column(mainAxisSize: MainAxisSize.max, children: <Widget>[
+                Container(
+                  child: _categoryList(context),
+                )
+              ]),
+            ),
+          );
+  }
+
+  _searchScreen() {
     return Container(
       //height: 60,
       width: MediaQuery.of(context).size.width,
@@ -113,38 +153,37 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget _categoryList(BuildContext context) {
     return Container(
-        child: Column(
+      child: Column(
         children: <Widget>[
           Container(
-          width: MediaQuery.of(context).size.width,
-          child: Padding(
-            padding: EdgeInsets.only(left: 35.0, top: 10.0),
-            child: Text(
-          "Girls",
-          style: TextStyle(
-                            color: Colors.pinkAccent,
-                            fontSize: 24.0,
-                            fontFamily: "WorkSansSemiBold"),
+            width: MediaQuery.of(context).size.width,
+            child: Padding(
+              padding: EdgeInsets.only(left: 35.0, top: 10.0),
+              child: Text(
+                "Girls",
+                style: TextStyle(
+                    color: Colors.pinkAccent,
+                    fontSize: 24.0,
+                    fontFamily: "WorkSansSemiBold"),
+              ),
+            ),
           ),
-        ),
-        ),
-        _buildCards(context, false),
-         Container(
-          width: MediaQuery.of(context).size.width,
-          child:
-        Padding(
-          padding: EdgeInsets.only(left: 35.0, top: 10.0),
-          child: Text(
-          "Boys",
-          style: TextStyle(
-                            color: Colors.blueAccent,
-                            fontSize: 24.0,
-                            fontFamily: "WorkSansSemiBold"),
-          ),
-        )),
-        _buildCards(context, true),
-      ],
-    ),
+          _buildCards(context, false),
+          Container(
+              width: MediaQuery.of(context).size.width,
+              child: Padding(
+                padding: EdgeInsets.only(left: 35.0, top: 10.0),
+                child: Text(
+                  "Boys",
+                  style: TextStyle(
+                      color: Colors.blueAccent,
+                      fontSize: 24.0,
+                      fontFamily: "WorkSansSemiBold"),
+                ),
+              )),
+          _buildCards(context, true),
+        ],
+      ),
     );
   }
 
@@ -178,22 +217,20 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget _buildMenuBar(BuildContext context) {
     var flatButton = FlatButton(
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      onPressed: _onHomSelected,
-                      child: Text(
-                        "Home",
-                        style: TextStyle(
-                            color: left,
-                            fontSize: 16.0,
-                            fontFamily: "WorkSansSemiBold"),
-                      ),
-                    );
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      onPressed: _onHomSelected,
+      child: Text(
+        "Home",
+        style: TextStyle(
+            color: left, fontSize: 16.0, fontFamily: "WorkSansSemiBold"),
+      ),
+    );
     return Container(
         width: 200.0,
         height: 50.0,
         decoration: BoxDecoration(
-          color: Colors.deepPurpleAccent,//Color(0x552B2B2B),
+          color: Colors.deepPurpleAccent, //Color(0x552B2B2B),
           borderRadius: BorderRadius.all(Radius.circular(25.0)),
         ),
         child: Column(
@@ -248,7 +285,9 @@ class _MainScreenState extends State<MainScreen> {
     final sportsList = [
       {"name": "soccer", "title": "Soccer"},
       {"name": "basketball", "title": "Basketball"},
+      {"name": "badminton", "title": "Badminton"},
       {"name": "volleyball", "title": "Volleyball"},
+      {"name": "tabletennis", "title": "Table Tennis"},
       {"name": "track", "title": "Track"}
     ];
     return Container(
@@ -265,8 +304,7 @@ class _MainScreenState extends State<MainScreen> {
                       context, index, sportsList[index], gender);
                 },
               ),
-            ))
-      );
+            )));
   }
 
   Widget _buildSportCard(
@@ -304,8 +342,8 @@ class _MainScreenState extends State<MainScreen> {
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2),
                     itemBuilder: (BuildContext context, int index) {
-                      return _categoryItem(
-                          context, index, sportsItem, categoryList[index], gender);
+                      return _categoryItem(context, index, sportsItem,
+                          categoryList[index], gender);
                     }),
               )
               /**/
@@ -314,8 +352,8 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget _categoryItem(
-      BuildContext context, int index, dynamic sportsItem, dynamic button, bool gender) {
+  Widget _categoryItem(BuildContext context, int index, dynamic sportsItem,
+      dynamic button, bool gender) {
     return Center(
         child: Stack(children: <Widget>[
       Positioned(
@@ -336,14 +374,15 @@ class _MainScreenState extends State<MainScreen> {
                       fontFamily: "WorkSansSemiBold"),
                 )),
             onPressed: () async {
-              await Navigator.push(context, MaterialPageRoute(builder: (context) {
+              await Navigator.push(context,
+                  MaterialPageRoute(builder: (context) {
                 return ScheduleScreen(sportsItem, button, gender);
               }));
               Future.delayed(const Duration(milliseconds: 150), () {
-                  updateStatusBarColor();
+                updateStatusBarColor();
               });
               Future.delayed(const Duration(milliseconds: 500), () {
-                  updateStatusBarColor();
+                updateStatusBarColor();
               });
             },
           )),
@@ -363,19 +402,18 @@ class _MainScreenState extends State<MainScreen> {
     ]));
   }
 
-  updateStatusBarColor(){
+  updateStatusBarColor() {
     if (Platform.isAndroid) {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-                statusBarColor: Colors.white, // Color for Android
-                statusBarBrightness: Brightness.dark
-              ));
+          statusBarColor: Colors.white, // Color for Android
+          statusBarBrightness: Brightness.dark));
     } else if (Platform.isIOS) {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-                statusBarColor: Colors.white, // Color for Android
-                statusBarBrightness: Brightness.light // Dark == white status bar -- for IOS.
-              ));
+          statusBarColor: Colors.white, // Color for Android
+          statusBarBrightness:
+              Brightness.light // Dark == white status bar -- for IOS.
+          ));
     }
-    setState(() {
-    });
+    setState(() {});
   }
 }

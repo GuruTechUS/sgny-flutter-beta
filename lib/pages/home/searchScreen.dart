@@ -30,9 +30,11 @@ class _SearchScreenState extends State<SearchScreen> {
 
   dynamic sport = {
     "soccer" : "Soccer",
-    "basketball": "Basket Ball",
+    "basketball": "Basketball",
+    "badminton": "Badminton",
     "volleyball": "Volleyball",
-    "track": "Track"
+    "tabletennis": "Table Tennis",
+    "track": "Track",
   };
 
   Stream<QuerySnapshot> eventStream = Firestore.instance.collection("events").snapshots();
@@ -195,7 +197,7 @@ class _SearchScreenState extends State<SearchScreen> {
           });
           updateStream();
         },
-        items: <String>['All Sports','Soccer', 'Basket Ball', 'Volleyball', 'Track']
+        items: <String>['All Sports','Soccer', 'Basketball', 'Badminton', 'Volleyball', 'Table Tennis', 'Track']
           .map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
@@ -256,12 +258,16 @@ class _SearchScreenState extends State<SearchScreen> {
     }
     if(sportValue == "Soccer"){
       sport = "soccer";
-    } else if(sportValue == "Basket Ball"){
+    } else if(sportValue == "Basketball"){
       sport = "basketball";
     } else if(sportValue == "Volleyball"){
       sport = "volleyball";
     } else if(sportValue == "Track"){
       sport = "track";
+    } else if(sportValue == "Badminton"){
+      sport = "badminton";
+    } else if(sportValue == "Table Tennis"){
+      sport = "tabletennis";
     }
 
     if(categoryValue == "u10" || categoryValue == "u14" || categoryValue == "u18" || categoryValue == "a10"){
@@ -381,7 +387,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   displayInfo(event){
-    return Text(event["gender"] == true ? "Boys":"Girls" + " / "+
+    return Text((event["gender"] == true ? "Boys":"Girls") + " / "+
               sport[event["sport"]] + " / " + event["category"]  
               );
   }
@@ -455,7 +461,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   getDate(DateTime startTime){
     if(startTime != null){
-      return Text(startTime.day.toString()+" "+months[startTime.month]);
+      return Text(startTime.day.toString()+" "+months[startTime.month - 1]);
     } else {
       return Text("");
     }
@@ -468,6 +474,9 @@ class _SearchScreenState extends State<SearchScreen> {
       String sufix = "AM";
       if(startTime.hour >= 12){
         hour = (startTime.hour-12).toString();
+        if(hour == '0'){
+          hour = '12';
+        }
         sufix = "PM";
       }
       return Text(
@@ -523,12 +532,10 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   subscribeToTopic(key){
-    print("subscribed: "+key);
     firebaseMessaging.subscribeToTopic(key);
   }
 
   unSubscribeToTopic(key){
-    print("unsubscribed: "+key);
     firebaseMessaging.unsubscribeFromTopic(key);
   }
 
